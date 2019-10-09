@@ -1,0 +1,11 @@
+BEGIN;
+
+ALTER TABLE gloomhelper_chars
+ALTER COLUMN perks
+SET DEFAULT '000000000000000';
+
+ALTER TABLE gloomhelper_chars
+ALTER COLUMN perks
+SET NOT NULL;
+
+COMMIT;

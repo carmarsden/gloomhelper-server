@@ -1,0 +1,11 @@
+BEGIN;
+
+ALTER TABLE gloomhelper_chars
+ALTER COLUMN perks
+DROP DEFAULT;
+
+ALTER TABLE gloomhelper_chars
+ALTER COLUMN perks
+DROP NOT NULL;
+
+COMMIT;
