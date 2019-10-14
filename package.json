@@ -2,6 +2,7 @@
     "name": "gloomhelper-server",
     "version": "1.0.0",
     "description": "",
+    "repository": "github:carmarsden/gloomhelper-server",
     "main": "index.js",
     "scripts": {
         "start": "node src/server.js",
