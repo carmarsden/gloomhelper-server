@@ -11,7 +11,7 @@
         "test:watch": "mocha --require ./test/setup.js --watch ./test ./",
         "migrate": "postgrator --config postgrator-config.js",
         "migrate-production": "postgrator --config postgrator-production-config.js",
-        "predeploy": "npm audit && npm run migrate-production",
+        "predeploy": "npm audit && npm test && npm run migrate-production",
         "deploy": "git push heroku master"
     },
     "keywords": [],
