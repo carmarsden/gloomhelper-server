@@ -5,8 +5,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const { NODE_ENV } = require('./config');
-const entriesRouter = require('./entries/entries-router');
 const app = express();
+const entriesRouter = require('./entries/entries-router');
+const usersRouter = require('./users/users-router');
 
 
 // LOGGING & API HANDLING MIDDLEWARE
@@ -21,7 +22,7 @@ app.use(cors());
 // BASIC ENDPOINT & ROUTING
 
 app.use('/api/entries', entriesRouter);
-
+app.use('/api/users', usersRouter);
 
 
 app.get('/api/', (req, res) => {

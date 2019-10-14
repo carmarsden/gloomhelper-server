@@ -9,8 +9,8 @@ TRUNCATE
 
 INSERT INTO gloomhelper_users (username, password)
 VALUES
-    ('frodo', 'thering'),
-    ('gandalf', 'thewizard')
+    ('frodo', '$2a$12$gstfE9as99I6LAnx2erfN.U7/seJHsWGwCJ9DveR.Ugrqgz65L.Zu'),
+    ('gandalf', '$2a$12$XKAo0NqWZzSLa9sKA4WHUOM1GC/OXqRUxb2GiD28kwfIBVkp2rVrW')
 ;
 
 INSERT INTO gloomhelper_parties (user_id, party_name, location, reputation, party_notes, achievements)
