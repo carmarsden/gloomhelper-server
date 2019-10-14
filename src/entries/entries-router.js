@@ -1,16 +1,17 @@
 const express = require('express');
 const logger = require('../logger');
 const EntriesService = require('./entries-service');
+const requireAuth = require('../auth/require-auth');
 
 const entriesRouter = express.Router();
 const jsonParser = express.json();
 
 entriesRouter
     .route('/')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         Promise.all([
-            EntriesService.getPartiesByUser(req.app.get('db'), req.query.user_id),
-            EntriesService.getCharsByUser(req.app.get('db'), req.query.user_id)
+            EntriesService.getPartiesByUser(req.app.get('db'), req.user.id),
+            EntriesService.getCharsByUser(req.app.get('db'), req.user.id)
         ])
             .then(entries => {
                 res.json(entries)
@@ -22,9 +23,9 @@ entriesRouter
 
 entriesRouter
     .route('/parties')
-    .post(jsonParser, (req, res, next) => {
+    .post(requireAuth, jsonParser, (req, res, next) => {
         const body = req.body;
-        body.user_id = Number(req.query.user_id);
+        body.user_id = Number(req.user.id);
 
         // validate requirements: check for required values
         const required = ['party_name', 'reputation'];
@@ -69,9 +70,9 @@ entriesRouter
 
 entriesRouter
     .route('/characters')
-    .post(jsonParser, (req, res, next) => {
+    .post(requireAuth, jsonParser, (req, res, next) => {
         const body = req.body;
-        body.user_id = Number(req.query.user_id);
+        body.user_id = Number(req.user.id);
 
         // validate requirements: check for required values
         const required = ['character_name', 'character_class'];
