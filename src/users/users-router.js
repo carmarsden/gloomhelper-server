@@ -6,7 +6,7 @@ const usersRouter = express.Router();
 const jsonParser = express.json();
 
 usersRouter
-    .post('/', jsonParser, (req, res, next) => {
+    .post('/register', jsonParser, (req, res, next) => {
         const { username, password } = req.body;
 
         // validate requirements: check for required values
@@ -68,6 +68,53 @@ usersRouter
                                 ;
                             })
                         ;
+                    })
+                ;
+            })
+            .catch(next)
+        ;
+    })
+;
+
+usersRouter
+    .post('/login', jsonParser, (req, res, next) => {
+        const { username, password } = req.body;
+        const loginUser = { username, password };
+
+        // validate requirements: check for required values
+        const required = ['username', 'password'];
+        for (const requirement of required) {
+            if (!req.body[requirement]) {
+                logger.error(`Missing '${requirement}' in login request`);
+                return res.status(400).json({
+                    error: `Missing '${requirement}' in request body`
+                })
+            }
+        }
+
+        UsersService.getUser(req.app.get('db'), loginUser.username)
+            .then(dbUser => {
+                if (!dbUser) {
+                    logger.error(`Failed login: user ${loginUser.username} not found`);
+                    return res.status(400).json({
+                        error: 'Incorrect username or password'
+                    })
+                }
+                
+                return UsersService.comparePasswords(loginUser.password, dbUser.password)
+                    .then(compareMatch => {
+                        if (!compareMatch) {
+                            logger.error(`Failed login: invalid password`);
+                            return res.status(400).json({
+                                error: 'Incorrect username or password'
+                            })
+                        }
+
+                        const sub = dbUser.username;
+                        const payload = { user_id: dbUser.id };
+                        res.send({
+                            authToken: UsersService.createJwt(sub, payload)
+                        })
                     })
                 ;
             })
