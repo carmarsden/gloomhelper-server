@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('../logger');
 const EntriesService = require('./entries-service');
 const requireAuth = require('../auth/require-auth');
+const { checkRequirements } = require('../utils/utils');
 
 const entriesRouter = express.Router();
 const jsonParser = express.json();
@@ -29,14 +30,7 @@ entriesRouter
 
         // validate requirements: check for required values
         const required = ['party_name', 'reputation'];
-        for (const requirement of required) {
-            if (!body[requirement]) {
-                logger.error(`Missing '${requirement}' in party post request`);
-                return res.status(400).json({
-                    error: `Missing '${requirement}' in request body`
-                })
-            }
-        }
+        checkRequirements(body, required, res);
 
         // validate reputation: must be an integer from -20 to +20
         if (typeof(body.reputation) !== 'number') {
@@ -76,14 +70,7 @@ entriesRouter
 
         // validate requirements: check for required values
         const required = ['character_name', 'character_class'];
-        for (const requirement of required) {
-            if (!body[requirement]) {
-                logger.error(`Missing '${requirement}' in character post request`);
-                return res.status(400).json({
-                    error: `Missing '${requirement}' in request body`
-                })
-            }
-        }
+        checkRequirements(body, required, res);
 
         // validate class: check it is one of accepted values
         const classes = ['brute', 'cragheart', 'mindthief', 'spellweaver', 'scoundrel', 'tinkerer'];

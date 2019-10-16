@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('../logger');
 const UsersService = require('./users-service');
+const { checkRequirements } = require('../utils/utils');
 
 const usersRouter = express.Router();
 const jsonParser = express.json();
@@ -58,14 +59,7 @@ usersRouter
 
         // validate requirements: check for required values
         const required = ['username', 'password'];
-        for (const requirement of required) {
-            if (!req.body[requirement]) {
-                logger.error(`Missing '${requirement}' in user registration request`);
-                return res.status(400).json({
-                    error: `Missing '${requirement}' in request body`
-                })
-            }
-        }
+        checkRequirements(req.body, required, res);
 
         // validate username: cannot start/end with space, must be >3 characters
         if (username.startsWith(' ') || username.endsWith(' ')) {
