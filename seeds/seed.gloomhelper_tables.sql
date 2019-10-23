@@ -14,12 +14,12 @@ VALUES
 ;
 
 INSERT INTO gloomhelper_parties (user_id, party_name, location, reputation, party_notes, achievements)
-    VALUES (1, 'Gloomhaven Gangsters', 'Gloomhaven', 4, 'last we checked, we were rising up against Jeksarah--pretty sure she''s evil??', 'First Steps\nSecond Steps');
+    VALUES (1, 'The Cool Cadre', 'Gloomhaven', 2, 'seagull road event is bad!\ndon''t follow Jekserah, she seems evil', 'First Steps\nSecond Steps');
 
 INSERT INTO gloomhelper_chars (user_id, character_name, character_class, xp, gold_notes, items_notes, character_notes, goals_1, goals_2, goals_3, perks)
 VALUES 
-    (1, 'Sal', 'brute', 32, '13 (saving up for chainmail armor)', 'Eagle Eye Goggles\nBoots of Striding', 'x2 blessings next scenario', 3, 1, 0, '000010000000000'),
-    (1, 'Transcendy MacMillion', 'spellweaver', 48, '46', 'Minor Manna Potion', 'Elite kills = 4', 2, 0, 0, '000001000000010')
+    (1, 'Mr. Stealsyobrain', 'mindthief', 46, '11 (saving up for invisibility cloak)', 'Eagle Eye Goggles\nBoots of Striding', 'x2 blessings next scenario', 3, 1, 0, '100010000000000'),
+    (1, 'Gloria', 'scoundrel', 32, '46', 'Poison dagger', 'Elite kills = 4', 2, 0, 0, '000001000000010')
 ;
 
 COMMIT;
