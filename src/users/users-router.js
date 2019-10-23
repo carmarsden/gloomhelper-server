@@ -70,9 +70,9 @@ usersRouter
         }
 
         if (username.length <= 3) {
-            logger.error(`Username must be at least 3 characters`);
+            logger.error(`Username must be more than 3 characters`);
             return res.status(400).json({
-                error: `Username must be at least 3 characters`
+                error: `Username must be more than 3 characters`
             })
         }
 
