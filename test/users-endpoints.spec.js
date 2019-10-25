@@ -20,12 +20,11 @@ describe('Users endpoints', function() {
     after('disconnect from db', () => db.destroy());
 
     before('cleanup', () => helpers.cleanTables(db));
+    beforeEach('insert users', () => helpers.seedUsers(db, testUsers));
     afterEach('cleanup', () => helpers.cleanTables(db));
 
     // TEST CASES: /api/users/login
     describe('POST /api/users/login', () => {
-        beforeEach('insert users', () => helpers.seedUsers(db, testUsers));
-
         it('responds with 200 and JWT when credentials valid', () => {
             const validUser = {
                 username: testUser.username,
@@ -126,6 +125,111 @@ describe('Users endpoints', function() {
                                 })
                             })
                     )
+                ;
+            })
+        })
+
+        context('User Validation', () => {
+            const requiredFields = ['username', 'password']
+            requiredFields.forEach(field => {
+                const loginInfo = {
+                    username: testUser.username,
+                    password: testUser.password,
+                };
+    
+                it(`responds with 400 error when '${field}' is missing`, () => {
+                    delete loginInfo[field];
+                    return supertest(app)
+                        .post('/api/users/register')
+                        .send(loginInfo)
+                        .expect(400, {
+                            error: `Missing '${field}' in request body`
+                        })
+                    ;
+                })
+            })
+
+            it(`responds with 400 error when password is too short`, () => {
+                const loginInfo = {
+                    username: 'new-user',
+                    password: 'short',
+                };
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(400, {
+                        error: `Password must be at least 8 characters`
+                    })
+                ;
+            })
+
+            it(`responds with 400 error when password is too long`, () => {
+                const loginInfo = {
+                    username: 'new-user',
+                    password: '1'.repeat(73),
+                };
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(400, {
+                        error: `Password must be no more than 72 characters`
+                    })
+                ;
+            })
+
+            it(`responds with 400 error when password starts with spaces`, () => {
+                const loginInfo = {
+                    username: 'new-user',
+                    password: ' 1234567aA!',
+                };
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(400, {
+                        error: `Password cannot start or end with empty spaces`
+                    })
+                ;
+            })
+
+            it(`responds with 400 error when password ends with spaces`, () => {
+                const loginInfo = {
+                    username: 'new-user',
+                    password: '1234567aA! ',
+                };
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(400, {
+                        error: `Password cannot start or end with empty spaces`
+                    })
+                ;
+            })
+
+            it(`responds with 400 error when password is not complex enough`, () => {
+                const loginInfo = {
+                    username: 'new-user',
+                    password: 'aaaaaaaa',
+                };
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(400, {
+                        error: `Password must contain at least one each of: upper case, lower case, number, and special character`
+                    })
+                ;
+            })
+
+            it(`responds with 400 error when username already exists`, () => {
+                const loginInfo = {
+                    username: testUser.username,
+                    password: '1234567aA!',
+                };
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(400, {
+                        error: `Username already taken`
+                    })
                 ;
             })
         })
