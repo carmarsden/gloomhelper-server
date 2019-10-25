@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Entries endpoints', function() {
+describe('Entries endpoints', function() {
     // ESTABLISH TEST ENVIRONMENT
     let db;
     const testUsers = helpers.makeUsersArray();
