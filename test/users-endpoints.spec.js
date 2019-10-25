@@ -30,15 +30,7 @@ describe('Users endpoints', function() {
                 username: testUser.username,
                 password: testUser.password
             };
-            const expectedToken = jwt.sign(
-                { user_id: testUser.expected_id },
-                process.env.JWT_SECRET,
-                {
-                    subject: testUser.username,
-                    expiresIn: process.env.JWT_EXPIRY,
-                    algorithm: 'HS256',
-                }
-            );
+            const expectedToken = helpers.makeAuthToken(testUser);
 
             return supertest(app)
                 .post('/api/users/login')

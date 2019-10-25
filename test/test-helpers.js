@@ -11,6 +11,18 @@ function cleanTables(db) {
     )
 }
 
+function makeAuthToken(user) {
+    return jwt.sign(
+        {user_id: user.expected_id},
+        process.env.JWT_SECRET,
+        {
+            subject: user.username,
+            expiresIn: process.env.JWT_EXPIRY,
+            algorithm: 'HS256'
+        }
+    );
+}
+
 function makeUsersArray() {
     return [
         {
@@ -72,10 +84,6 @@ function makeChar() {
     }
 }
 
-function makeAuthHeader(user) {
-
-}
-
 function seedUsers(db, users) {
     const preppedUsers = users.map(user => ({
         username: user.username,
@@ -96,6 +104,7 @@ function seedEntries(db, party, char) {
 
 module.exports = {
     cleanTables,
+    makeAuthToken,
     makeUsersArray,
     makeParty,
     makeChar,
