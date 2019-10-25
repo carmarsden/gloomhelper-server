@@ -86,5 +86,49 @@ describe('Users endpoints', function() {
                 ;
             })
         })
+    });
+
+    // TEST CASES: /api/users/register
+    describe('POST /api/users/register', () => {
+        context('Happy path', () => {
+            it(`responds 201, serialized user, storing bcrypted password`, () => {
+                const loginInfo = {
+                    username: 'new-user',
+                    password: '12345aA!',
+                };
+
+                return supertest(app)
+                    .post('/api/users/register')
+                    .send(loginInfo)
+                    .expect(201)
+                    .expect(res => {
+                        expect(res.body).to.have.property('id')
+                        expect(res.body).to.have.property('username')
+                        expect(res.body).to.not.have.property('password')
+                        expect(res.body.username).to.eql(loginInfo.username)
+                        const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                        const actualDate = new Date(res.body.date_created).toLocaleString()
+                        expect(actualDate).to.eql(expectedDate)
+                    })
+                    .expect(res =>
+                        db
+                            .from('gloomhelper_users')
+                            .select('*')
+                            .where({ id: res.body.id })
+                            .first()
+                            .then(row => {
+                                expect(row.username).to.eql(loginInfo.username)
+                                const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                                const actualDate = new Date(row.date_created).toLocaleString()
+                                expect(actualDate).to.eql(expectedDate)                
+                                bcrypt.compare(loginInfo.password, row.password, function(err, match) {
+                                    expect(match).to.be.true;
+                                })
+                            })
+                    )
+                ;
+            })
+        })
     })
+
 })
